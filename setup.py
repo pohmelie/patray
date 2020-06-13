@@ -29,6 +29,10 @@ setup(
     url="https://github.com/pohmelie/patray",
     author="pohmelie",
     author_email="multisosnooley@gmail.com",
+    long_description=Path("readme.md").read_text(),
+    long_description_content_type="text/markdown",
+    license="MIT",
+    license_file="license.txt",
     package_data={
         "": ["*.txt", "*.template"],
     },
