@@ -26,6 +26,9 @@ setup(
     name="patray",
     version=VERSION.read_text().strip(),
     packages=find_packages(),
+    url="https://github.com/pohmelie/patray",
+    author="pohmelie",
+    author_email="multisosnooley@gmail.com",
     package_data={
         "": ["*.txt", "*.template"],
     },

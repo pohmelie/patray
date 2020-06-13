@@ -1,4 +1,8 @@
 # patray
+[![Travis status for master branch](https://travis-ci.com/pohmelie/patray.svg?branch=master)](https://travis-ci.com/pohmelie/patray)
+[![Pypi version](https://img.shields.io/pypi/v/patray.svg)](https://pypi.org/project/patray/)
+[![Pypi downloads count](https://img.shields.io/pypi/dm/patray)](https://pypi.org/project/patray/)
+
 Patray stands for PulseAudioTray. It is "yet another pulseaudio frontend".
 
 ## Default view
