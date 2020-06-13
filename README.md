@@ -1,9 +1,13 @@
 # patray
 Patray stands for PulseAudioTray. It is "yet another pulseaudio frontend".
 
-![first](gifs/Peek 2020-06-13 16-57.gif)
+## Default view
 
-![changing styles](gifs/Peek 2020-06-13 18-09.gif)
+![](https://github.com/pohmelie/patray/blob/master/gifs/Peek%202020-06-13%2016-57.gif?raw=true)
+
+## Configuring
+
+![](https://github.com/pohmelie/patray/blob/master/gifs/Peek%202020-06-13%2018-09.gif?raw=true)
 
 # Reasons
 - Brilliant [yktoo sound switcher](https://github.com/yktoo/indicator-sound-switcher) lacks of volume control
