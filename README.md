@@ -2,11 +2,9 @@
 Patray stands for PulseAudioTray. It is "yet another pulseaudio frontend".
 
 ## Default view
-
 ![](https://github.com/pohmelie/patray/blob/master/gifs/Peek%202020-06-13%2016-57.gif?raw=true)
 
 ## Configuring
-
 ![](https://github.com/pohmelie/patray/blob/master/gifs/Peek%202020-06-13%2018-09.gif?raw=true)
 
 # Reasons
