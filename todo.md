@@ -1,0 +1,2 @@
+- preferences window
+- packaging

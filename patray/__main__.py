@@ -1,10 +1,9 @@
 import sys
 
 from click import Choice, Path, option, version_option
+from cock import build_entrypoint
 from loguru import logger
 from PySide2.QtWidgets import QApplication
-
-from cock import build_entrypoint
 
 from . import version
 from .logging import configure_logging
@@ -32,7 +31,7 @@ options = [
     option("--log-level", default="INFO"),
     option("--icon-path", default=None, required=False,
            type=Path(exists=True, dir_okay=False, readable=True, resolve_path=True)),
-    option("--icon-color", default="#fff"),
+    option("--icon-color", default="#fff", help="Use `random` value for random color on each click"),
     version_option(version, message="%(version)s"),
 ]
 entrypoint = build_entrypoint(main, options, auto_envvar_prefix="PATRAY", show_default=True)

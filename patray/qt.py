@@ -1,3 +1,4 @@
+import random
 import sys
 from fnmatch import fnmatch
 from functools import partial
@@ -73,30 +74,38 @@ class Patray(QObject):
 
     def activated(self, reason):
         logger.debug("tray activated (reason {})", reason)
+        self.set_icon()
         self.position = QCursor.pos()
         self.rebuild_menu()
 
     def get_icon(self):
-        logger.info("loading icon...")
+        logger.debug("loading icon...")
         if self.config.icon_path:
-            logger.info("will use {!r} icon path", self.config.icon_path)
+            logger.debug("will use {!r} icon path", self.config.icon_path)
             return QIcon(self.config.icon_path)
         else:
-            logger.info("will render icon with {!r} color", self.config.icon_color)
+            if self.config.icon_color == "random":
+                color = f"#{random.randint(0, 2 ** 24):x}"
+            else:
+                color = self.config.icon_color
+            logger.debug("will render icon with {!r} color", color)
             raw = resources.read_binary("patray", "icon.svg.template")
-            rendered = raw.replace(b"{}", self.config.icon_color.encode())
+            rendered = raw.replace(b"{}", color.encode())
             image = QImage.fromData(rendered, "SVG")
             pixmap = QPixmap.fromImage(image)
             icon = QIcon(pixmap)
-            return icon
+            return color, icon
+
+    def set_icon(self):
+        color, self.icon = self.get_icon()
+        self.tray.setIcon(self.icon)
+        self.tray.setToolTip(f"patray ({color})")
 
     def build_tray(self):
         logger.info("building tray...")
-        self.icon = self.get_icon()
-        self.tray = QSystemTrayIcon(self.icon)
+        self.tray = QSystemTrayIcon()
         self.tray.activated.connect(self.activated)
-        self.tray.setIcon(self.icon)
-        self.tray.setToolTip("patray")
+        self.set_icon()
         menu = QMenu()
         menu.addAction("About").triggered.connect(self.about)
         menu.addAction("Quit").triggered.connect(self.quit)
