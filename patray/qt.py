@@ -82,7 +82,7 @@ class Patray(QObject):
         logger.debug("loading icon...")
         if self.config.icon_path:
             logger.debug("will use {!r} icon path", self.config.icon_path)
-            return QIcon(self.config.icon_path)
+            return None, QIcon(self.config.icon_path)
         else:
             if self.config.icon_color == "random":
                 color = f"#{random.randint(0, 2 ** 24):x}"
@@ -99,7 +99,10 @@ class Patray(QObject):
     def set_icon(self):
         color, self.icon = self.get_icon()
         self.tray.setIcon(self.icon)
-        self.tray.setToolTip(f"patray ({color})")
+        if color:
+            self.tray.setToolTip(f"patray ({color})")
+        else:
+            self.tray.setToolTip("patray")
 
     def build_tray(self):
         logger.info("building tray...")
@@ -199,7 +202,7 @@ class Patray(QObject):
                 items=[f"{p.name}" for p in end.ports],
                 active_id=end.active_port_id,
                 handler=partial(self.port_changed, end.ports, slider),
-                hide_masks=self.config.port_hide_radio_by_mask,
+                hide_masks=self.config.port_hide_by_mask,
             )
             slider.setMinimum(0)
             slider.setMaximum(self.config.port_maximum_volume)

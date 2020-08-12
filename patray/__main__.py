@@ -26,7 +26,7 @@ options = [
     option("--port-enabled", default=True, type=bool),
     option("--port-style", default="radio", type=style),
     option("--port-maximum-volume", default=100, type=int),
-    option("--port-hide-radio-by-mask", multiple=True),
+    option("--port-hide-by-mask", multiple=True),
 
     option("--log-level", default="INFO"),
     option("--icon-path", default=None, required=False,

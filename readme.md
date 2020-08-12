@@ -59,7 +59,7 @@ Options:
   --port-enabled BOOLEAN          [default: True]
   --port-style [combo|radio]      [default: radio]
   --port-maximum-volume INTEGER   [default: 100]
-  --port-hide-radio-by-mask TEXT
+  --port-hide-by-mask TEXT
   --log-level TEXT                [default: INFO]
   --icon-path FILE
   --icon-color TEXT               [default: #fff]
@@ -76,7 +76,7 @@ port:
   enabled: true
   style: radio
   maximum-volume: 100
-  hide-radio-by-mask:
+  hide-by-mask:
     - "Front*"
     - "Rear*"
     - "Line In*"
