@@ -27,6 +27,10 @@ options = [
     option("--port-style", default="radio", type=style),
     option("--port-maximum-volume", default=100, type=int),
     option("--port-hide-by-mask", multiple=True),
+    option("--template-enabled", default=True, type=bool),
+    option("--template-style", default="radio", type=style),
+    option("--template-file", default=None, required=False,
+           type=Path(exists=True, dir_okay=False, readable=True, resolve_path=True)),
 
     option("--log-level", default="INFO"),
     option("--icon-path", default=None, required=False,

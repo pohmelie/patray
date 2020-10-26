@@ -3,8 +3,10 @@ import sys
 from fnmatch import fnmatch
 from functools import partial
 from importlib import resources
+from pathlib import Path
 from typing import Callable, List, Optional
 
+import yaml
 from loguru import logger
 from PySide2.QtCore import QLibraryInfo, QObject, QPoint, Qt, Signal
 from PySide2.QtGui import QCursor, QIcon, QImage, QPixmap
@@ -59,10 +61,18 @@ class Patray(QObject):
     def __init__(self, config):
         super().__init__()
         self.config = config
+        self.templates = self._resolve_templates()
+        self.templates_active_id = 0
+        self.selected_template = 0
         self.pulse = Pulse(config)
         self.menu = CustomMenu()
         self.build_tray()
         self.rebuild_signal.connect(self.rebuild_menu, type=Qt.QueuedConnection)
+
+    def _resolve_templates(self):
+        if not self.config.template_enabled or not self.config.template_file:
+            return
+        return yaml.safe_load(Path(self.config.template_file).read_text())
 
     def quit(self):
         logger.info("closing...")
@@ -131,6 +141,7 @@ class Patray(QObject):
 
         if self.config.profile_enabled:
             self.add_cards()
+        self.add_templates()
         self.add_ends()
 
         logger.debug("poping up widget at {}", self.position)
@@ -187,6 +198,20 @@ class Patray(QObject):
     def profile_changed(self, profiles, index):
         self.pulse.set_profile(profiles[index])
         self.rebuild_signal.emit()
+
+    def template_changed(self, index):
+        print(index)
+
+    def add_templates(self):
+        if not self.templates:
+            return
+        factory = self.factory_by_name(self.config.template_style)
+        names = [t["name"] for t in self.templates]
+        factory(
+            items=names,
+            active_id=self.templates_active_id,
+            handler=self.template_changed,
+        )
 
     def add_ends(self):
         for end in self.pulse.ends:
