@@ -1,3 +1,4 @@
+import fractions
 import random
 import sys
 from fnmatch import fnmatch
@@ -8,8 +9,9 @@ from typing import Callable, List, Optional
 from loguru import logger
 from PySide2.QtCore import QLibraryInfo, QObject, QPoint, Qt, Signal
 from PySide2.QtGui import QCursor, QIcon, QImage, QPixmap
-from PySide2.QtWidgets import (QApplication, QButtonGroup, QComboBox, QLabel, QMenu, QMessageBox, QRadioButton, QSlider,
-                               QStyleOptionSlider, QSystemTrayIcon, QToolTip, QVBoxLayout, QWidget, QWidgetAction)
+from PySide2.QtWidgets import (QApplication, QButtonGroup, QComboBox, QHBoxLayout, QLabel, QMenu, QMessageBox,
+                               QRadioButton, QSlider, QStyleOptionSlider, QSystemTrayIcon, QToolTip, QVBoxLayout,
+                               QWidget, QWidgetAction)
 
 from . import version
 from .pa import EndType, Pulse
@@ -136,11 +138,20 @@ class Patray(QObject):
         logger.debug("poping up widget at {}", self.position)
         self.menu.popup(self.position)
 
-    def add_widget(self, w: QWidget):
+    def add_widget(self, w: QWidget, weight: float = 1.0) -> QWidget:
+        if weight != 1.0:
+            fraction = fractions.Fraction(1 - weight).limit_denominator(1000)
+            outer_widget = QWidget()
+            layout = QHBoxLayout(outer_widget)
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.addStretch(stretch=fraction.numerator)
+            layout.addWidget(w, stretch=fraction.denominator)
+            w = outer_widget
         self.vbox.addWidget(w)
+        return w
 
     def factory_combo(self, items: Optional[List[str]], active_id: Optional[int], handler: Callable,
-                      hide_masks: List[str] = ()):
+                      hide_masks: List[str] = (), weight: float = 1.0):
         combo = QComboBox()
         for item in items:
             combo.addItem(item)
@@ -149,19 +160,19 @@ class Patray(QObject):
         else:
             combo.setCurrentIndex(active_id)
         combo.currentIndexChanged.connect(handler)
-        self.add_widget(combo)
+        self.add_widget(combo, weight=weight)
 
     def factory_radio(self, items: Optional[List[str]], active_id: Optional[int], handler: Callable,
-                      hide_masks: List[str] = ()):
+                      hide_masks: List[str] = (), weight: float = 1.0):
         group = QButtonGroup()
         for i, item in enumerate(items):
             button = QRadioButton(item)
             if i == active_id:
                 button.setChecked(True)
             group.addButton(button, i)
-            self.add_widget(button)
+            widget = self.add_widget(button, weight=weight)
             if any(fnmatch(item, mask) for mask in hide_masks):
-                button.hide()
+                widget.hide()
         group.idClicked.connect(handler)
         self._non_gc_bucket.append(group)
 
@@ -182,6 +193,7 @@ class Patray(QObject):
                 items=[f"{p.name} [{p.sinks_count}:{p.sources_count}]" for p in card.profiles],
                 active_id=card.active_profile_id,
                 handler=partial(self.profile_changed, card.profiles),
+                weight=self.config.profile_weight,
             )
 
     def profile_changed(self, profiles, index):
@@ -203,6 +215,7 @@ class Patray(QObject):
                 active_id=end.active_port_id,
                 handler=partial(self.port_changed, end.ports, slider),
                 hide_masks=self.config.port_hide_by_mask,
+                weight=self.config.port_weight,
             )
             slider.setMinimum(0)
             slider.setMaximum(self.config.port_maximum_volume)

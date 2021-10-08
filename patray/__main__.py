@@ -23,10 +23,12 @@ style = Choice(["combo", "radio"])
 options = [
     option("--profile-enabled", default=True, type=bool),
     option("--profile-style", default="combo", type=style),
+    option("--profile-weight", default=1.0, type=float),
     option("--port-enabled", default=True, type=bool),
     option("--port-style", default="radio", type=style),
     option("--port-maximum-volume", default=100, type=int),
     option("--port-hide-by-mask", multiple=True),
+    option("--port-weight", default=1.0, type=float),
 
     option("--log-level", default="INFO"),
     option("--icon-path", default=None, required=False,
