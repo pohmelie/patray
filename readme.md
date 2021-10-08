@@ -48,33 +48,38 @@ $ python -m patray --help
 to see all available options. But you can pass all options via command line interface, or even via environemnt vairables.
 
 # Example
-For version `0.1.0` help output looks like this:
+For version `0.1.2` help output looks like this:
 ```
 $ python -m patray --help
 Usage: patray [OPTIONS] [CONFIGURATION_FILE]
 
 Options:
-  --profile-enabled BOOLEAN       [default: True]
-  --profile-style [combo|radio]   [default: combo]
-  --port-enabled BOOLEAN          [default: True]
-  --port-style [combo|radio]      [default: radio]
-  --port-maximum-volume INTEGER   [default: 100]
+  --profile-enabled BOOLEAN      [default: True]
+  --profile-style [combo|radio]  [default: combo]
+  --profile-weight FLOAT         [default: 1.0]
+  --port-enabled BOOLEAN         [default: True]
+  --port-style [combo|radio]     [default: radio]
+  --port-maximum-volume INTEGER  [default: 100]
   --port-hide-by-mask TEXT
-  --log-level TEXT                [default: INFO]
+  --port-weight FLOAT            [default: 1.0]
+  --log-level TEXT               [default: INFO]
   --icon-path FILE
-  --icon-color TEXT               [default: #fff]
-  --version                       Show the version and exit.  [default: False]
-  --help                          Show this message and exit.  [default:
-                                  False]
+  --icon-color TEXT              Use `random` value for random color on each
+                                 click  [default: #fff]
+
+  --version                      Show the version and exit.  [default: False]
+  --help                         Show this message and exit.  [default: False]
 ```
 You can see all defaults and all «flat» keys. Your configuration file can look like this:
 ``` yml
+icon-color: random
 profile:
-  enabled: false
+  enabled: true
   style: combo
 port:
   enabled: true
   style: radio
+  weight: 0.95
   maximum-volume: 100
   hide-by-mask:
     - "Front*"
